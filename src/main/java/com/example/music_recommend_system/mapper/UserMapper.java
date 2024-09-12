@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Update;
 
 public interface UserMapper extends BaseMapper<User> {
     // 自定义查询语句，根据 userId 和 password 查询
-    @Select("SELECT * FROM users WHERE user_id = #{user_id}")
+    @Select("SELECT * FROM users WHERE user_id = #{user_id} AND password = #{password}")
     User findByUserIdAndPassword(@Param("user_id") Integer user_id, @Param("password") String password);
 
     // 根据 user_id 更新 user_name
