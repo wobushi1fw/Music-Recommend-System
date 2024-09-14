@@ -1,10 +1,13 @@
 package com.example.music_recommend_system.service.impl;
 
+import com.example.music_recommend_system.entity.Friend;
 import com.example.music_recommend_system.entity.User;
 import com.example.music_recommend_system.mapper.UserMapper;
 import com.example.music_recommend_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,18 +22,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserName(Integer user_id, String user_name) {
-        // 查找用户
         User user = userMapper.findByUserId(user_id);
 
         if (user != null) {
-            // 更新用户名
+            System.out.println(user);
             int result = userMapper.updateUserName(user_id, user_name);
-            if (result > 0) {
-                user.setUser_name(user_name); // 更新成功
+            System.out.println(result);
+            if (result != 0) {
+                user.setUser_name(user_name);
                 return user;
             }
         }
 
         return new User(); // 更新失败，返回空对象
+    }
+
+    @Override
+    public List<Friend> findFriendsByUserId(Integer user_id) {
+        return userMapper.findFriendsByUserId(user_id);
+    }
+
+    @Override
+    public User findByUserId(Integer user_id) {
+        return userMapper.findByUserId(user_id);
     }
 }

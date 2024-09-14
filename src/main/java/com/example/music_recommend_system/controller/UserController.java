@@ -1,12 +1,16 @@
 package com.example.music_recommend_system.controller;
 
 import com.example.music_recommend_system.common.response.LoginResponse;
+import com.example.music_recommend_system.common.response.FriendResponse;
 import com.example.music_recommend_system.common.response.SetNameResponse;
 import com.example.music_recommend_system.common.request.SetNameRequest;
+import com.example.music_recommend_system.entity.Friend;
 import com.example.music_recommend_system.entity.User;
 import com.example.music_recommend_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -66,5 +70,42 @@ public class UserController {
         setNameResponse.setUser_name(null);
         return setNameResponse;
     }
+
+    @GetMapping("/friend")
+    public FriendResponse getFriends(@RequestParam("user_id") Integer user_id) {
+        FriendResponse friendResponse = new FriendResponse();
+        List<Friend> friends;
+
+        friends = userService.findFriendsByUserId(user_id);
+        System.out.println(1);
+        System.out.println(friends.getFirst().getUser_id());
+        System.out.println(friends.getFirst().getUser_name());
+        try {
+            friends = userService.findFriendsByUserId(user_id);
+            System.out.println(1);
+            System.out.println(friends.getFirst().getUser_id());
+            System.out.println(friends.getFirst().getUser_name());
+        } catch (Exception e) {
+            friendResponse.setStatus("error");
+            friendResponse.setMessage("Query friends failed");
+            friendResponse.setUser_id(user_id);
+            friendResponse.setFriends(null);
+            return friendResponse;
+        }
+
+        if (friends == null || friends.isEmpty()) {
+            friendResponse.setStatus("error");
+            friendResponse.setMessage("Query friends failed");
+            friendResponse.setFriends(null);
+        } else {
+            friendResponse.setStatus("success");
+            friendResponse.setMessage("Query friends successfully");
+            friendResponse.setFriends(friends);
+        }
+
+        friendResponse.setUser_id(user_id);
+        return friendResponse;
+    }
+
 
 }
