@@ -10,7 +10,9 @@ import com.example.music_recommend_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -105,6 +107,32 @@ public class UserController {
 
         friendResponse.setUser_id(user_id);
         return friendResponse;
+    }
+
+    @PostMapping("/social")
+    public Map<String, Object> changeSocialRelationship(@RequestBody Map<String, Object> socialRequest) {
+        Integer userId = (Integer) socialRequest.get("user_id");
+        Integer objUserId = (Integer) socialRequest.get("obj_user_id");
+        Boolean follow = (Boolean) socialRequest.get("follow");
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // Call the service to change the social relationship
+            List<Integer> updatedFriendsList = userService.changeSocialRelationship(userId, objUserId, follow);
+
+            response.put("status", "success");
+            response.put("message", "Change social relationship successfully");
+            response.put("user_id", userId);
+            response.put("friend_ids", updatedFriendsList);
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "Change social relationship failed");
+            response.put("user_id", userId);
+            response.put("friend_ids", null);
+        }
+
+        return response;
     }
 
 

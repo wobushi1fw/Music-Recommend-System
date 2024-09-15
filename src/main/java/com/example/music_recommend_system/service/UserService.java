@@ -18,4 +18,6 @@ public interface UserService {
 
     // 查找指定 user_id 的用户
     User findByUserId(Integer user_id);
+
+    List<Integer> changeSocialRelationship(Integer userId, Integer objUserId, Boolean follow);
 }

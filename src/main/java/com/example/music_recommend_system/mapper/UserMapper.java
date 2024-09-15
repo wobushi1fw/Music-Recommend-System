@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Delete;
 
 import java.util.List;
 
@@ -31,4 +33,21 @@ public interface UserMapper {
     // 查找用户
     @Select("SELECT * FROM users WHERE user_id = #{user_id}")
     User findByUserId(@Param("user_id") Integer user_id);
+
+
+    // Check if the relationship already exists
+    @Select("SELECT 1 FROM user_friends WHERE user_id = #{user_id} AND friend_id = #{friend_id}")
+    Integer checkIfRelationExists(@Param("user_id") Integer user_id, @Param("friend_id") Integer friend_id);
+
+    // Add a new relationship
+    @Insert("INSERT INTO user_friends (user_id, friend_id) VALUES (#{user_id}, #{friend_id})")
+    void addFriend(@Param("user_id") Integer user_id, @Param("friend_id") Integer friend_id);
+
+    // Remove an existing relationship
+    @Delete("DELETE FROM user_friends WHERE user_id = #{user_id} AND friend_id = #{friend_id}")
+    void removeFriend(@Param("user_id") Integer user_id, @Param("friend_id") Integer friend_id);
+
+    // Get the list of friend IDs for a user
+    @Select("SELECT friend_id FROM user_friends WHERE user_id = #{user_id}")
+    List<Integer> getFriendIdsByUserId(@Param("user_id") Integer user_id);
 }

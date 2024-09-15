@@ -46,4 +46,25 @@ public class UserServiceImpl implements UserService {
     public User findByUserId(Integer user_id) {
         return userMapper.findByUserId(user_id);
     }
+
+    @Override
+    public List<Integer> changeSocialRelationship(Integer userId, Integer objUserId, Boolean follow) {
+        // Check if the relationship exists
+        Integer relationExists = userMapper.checkIfRelationExists(userId, objUserId);
+
+        if (follow) {
+            if (relationExists == null) {
+                // If follow is true and the relation does not exist, add the relationship
+                userMapper.addFriend(userId, objUserId);
+            }
+        } else {
+            if (relationExists != null) {
+                // If follow is false and the relation exists, remove the relationship
+                userMapper.removeFriend(userId, objUserId);
+            }
+        }
+
+        // Return the updated list of friend ids
+        return userMapper.getFriendIdsByUserId(userId);
+    }
 }
