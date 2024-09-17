@@ -20,4 +20,6 @@ public interface UserService {
     User findByUserId(Integer user_id);
 
     List<Integer> changeSocialRelationship(Integer userId, Integer objUserId, Boolean follow);
+
+    String getUserName(Integer user_id);
 }

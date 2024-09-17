@@ -67,4 +67,9 @@ public class UserServiceImpl implements UserService {
         // Return the updated list of friend ids
         return userMapper.getFriendIdsByUserId(userId);
     }
+
+    @Override
+    public String getUserName(Integer user_id) {
+        return userMapper.getUserName(user_id);
+    }
 }

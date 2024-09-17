@@ -2,6 +2,7 @@ package com.example.music_recommend_system.controller;
 
 import com.example.music_recommend_system.common.response.LoginResponse;
 import com.example.music_recommend_system.common.response.FriendResponse;
+import com.example.music_recommend_system.common.response.SearchResponse;
 import com.example.music_recommend_system.common.response.SetNameResponse;
 import com.example.music_recommend_system.common.request.SetNameRequest;
 import com.example.music_recommend_system.entity.Friend;
@@ -109,7 +110,7 @@ public class UserController {
         return friendResponse;
     }
 
-    @PostMapping("/social")
+    @PostMapping("/social") //关注&取关
     public Map<String, Object> changeSocialRelationship(@RequestBody Map<String, Object> socialRequest) {
         Integer userId = (Integer) socialRequest.get("user_id");
         Integer objUserId = (Integer) socialRequest.get("obj_user_id");
@@ -135,5 +136,49 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/search")
+    public SearchResponse search(@RequestParam("user_id") Integer user_id, @RequestParam("obj_user_id") Integer obj_user_id) {
+
+        SearchResponse searchResponse = new SearchResponse();
+        List<Friend> friends;
+        Friend obj_friend;
+//        try {
+            String obj_user_name = userService.getUserName(obj_user_id);
+            obj_friend = new Friend();
+            obj_friend.setUser_id(obj_user_id);
+            obj_friend.setUser_name(obj_user_name);
+
+            friends = userService.findFriendsByUserId(user_id);
+            System.out.println(friends);
+
+//        } catch (Exception e) {
+//            System.out.println(user_id);
+//            searchResponse.setStatus("error");
+//            searchResponse.setMessage("Search failed");
+//            searchResponse.setUser_id(user_id);
+//            searchResponse.setObj_user_id(null);
+//            searchResponse.setObj_user_name(null);
+//            searchResponse.setFollow(null);
+//            return searchResponse;
+//        }
+
+        if (friends.contains(obj_friend)) {
+            searchResponse.setStatus("success");
+            searchResponse.setMessage("Search successful");
+            searchResponse.setUser_id(user_id);
+            searchResponse.setObj_user_id(obj_user_id);
+            searchResponse.setObj_user_name(obj_friend.getUser_name());
+            searchResponse.setFollow(Boolean.TRUE);
+        } else {
+            searchResponse.setStatus("success");
+            searchResponse.setMessage("Search successful");
+            searchResponse.setUser_id(user_id);
+            searchResponse.setObj_user_id(obj_user_id);
+            searchResponse.setObj_user_name(obj_friend.getUser_name());
+            searchResponse.setFollow(Boolean.FALSE);
+        }
+
+        return searchResponse;
+    }
 
 }

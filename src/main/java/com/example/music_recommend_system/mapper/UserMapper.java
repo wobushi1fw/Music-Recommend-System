@@ -50,4 +50,9 @@ public interface UserMapper {
     // Get the list of friend IDs for a user
     @Select("SELECT friend_id FROM user_friends WHERE user_id = #{user_id}")
     List<Integer> getFriendIdsByUserId(@Param("user_id") Integer user_id);
+
+    // 根据 user_id 获取用户的用户名
+    @Select("SELECT user_name FROM users WHERE user_id = #{user_id}")
+    String getUserName(@Param("user_id") Integer user_id);
+
 }
